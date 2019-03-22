@@ -16,9 +16,11 @@ const getVisibleShapes = (shapes, filter) => {
   }
 }
 
-const mapStateToProps = state => ({
-  shapes: getVisibleShapes(state.shapes, state.shapeFilter)
-});
+const mapStateToProps = (state, ownProps) => {
+  return {
+    shapes: getVisibleShapes(state.shapes, ownProps.filter)
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
   removeShape: id => dispatch(removeShape(id))

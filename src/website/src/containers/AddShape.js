@@ -17,7 +17,7 @@ const AddShape = ({ dispatch }) => {
         if (!colorInput.value.trim()) {
           return;
         }
-        dispatch(addShape(sidesInput.value, colorInput.value));
+        dispatch(addShape(Number(sidesInput.value), colorInput.value));
         colorInput.value = '';
         sidesInput.value = '';
       }}>
