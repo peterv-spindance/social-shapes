@@ -1,0 +1,24 @@
+{
+  "name": "social-shapes",
+  "version": "0.0.1",
+  "description": "Geometry-based social media",
+  "dependencies": {
+    "social-shapes-lambda": "./src/lambda/",
+    "social-shapes-website": "./src/website/"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start-site": "cd ./src/website && npm run start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peterv-spindance/social-shapes.git"
+  },
+  "author": "peterv-spindance",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/peterv-spindance/social-shapes/issues"
+  },
+  "homepage": "https://github.com/peterv-spindance/social-shapes#readme",
+  "private": true
+}
