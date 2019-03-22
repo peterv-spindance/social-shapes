@@ -8,8 +8,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start-site": "cd ./src/website && npm run start",
-    "eject-site": "cd ./src/website && npm run eject"
+    "site-build": "cd ./src/website && npm run build"
   },
   "repository": {
     "type": "git",
