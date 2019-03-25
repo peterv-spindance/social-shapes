@@ -8,9 +8,19 @@ const getVisibleShapes = (shapes, filter) => {
     case ShapeFilters.SHOW_ALL:
       return shapes
     case ShapeFilters.SHOW_TRIANGLES:
-      return shapes.filter(s => s.sides === 3);
+      return Object.keys(shapes)
+        .filter(key => shapes[key].sides === 3)
+        .reduce((acc, nextKey) => {
+          acc[nextKey] = shapes[nextKey];
+          return acc;
+        }, {});
     case ShapeFilters.SHOW_SQUARES:
-      return shapes.filter(s => s.sides === 4);
+      return Object.keys(shapes)
+        .filter(key => shapes[key].sides === 4)
+        .reduce((acc, nextKey) => {
+          acc[nextKey] = shapes[nextKey];
+          return acc;
+        }, {});
     default:
       throw new Error('Unknown filter: ' + filter);
   }

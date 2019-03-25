@@ -1,16 +1,34 @@
-const shapes = (state = [], action) => {
+const shapes = (state = {}, action) => {
   switch (action.type) {
-    case 'ADD_SHAPE':
-      return [
+    case 'REQUEST_ADD_SHAPE':
+      return {
         ...state,
-        {
+        [action.id]: {
+          isSyncing: true,
           id: action.id,
           sides: action.sides,
           color: action.color
         }
-      ];
-    case 'REMOVE_SHAPE':
-      return state.filter(s => s.id !== action.id);
+      };
+    case 'COMPLETE_ADD_SHAPE':
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          isSyncing: false,
+        }
+      };
+    case 'REQUEST_REMOVE_SHAPE':
+      return {
+        ...state,
+        [action.id]: {
+          ...state[action.id],
+          isSyncing: true,
+        }
+      };
+    case 'COMPLETE_REMOVE_SHAPE':
+      const { [action.id]: value, ...removed } = state;
+      return removed;
     default:
       return state;
   }

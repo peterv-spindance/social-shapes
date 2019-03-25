@@ -3,11 +3,11 @@ import Shape from './Shape/Shape';
 
 const ShapeList = ({ shapes, removeShape }) => (
   <ul>
-    {shapes.map(shape =>
+    {Object.keys(shapes).map(id =>
       <Shape
-        key={shape.id}
-        {...shape}
-        onClick={() => removeShape(shape.id)}
+        key={shapes[id].id}
+        {...shapes[id]}
+        onClick={() => removeShape(shapes[id].id)}
       />
     )}
   </ul>

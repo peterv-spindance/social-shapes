@@ -1,9 +1,10 @@
 import React from 'react'
 
-const Shape = ({ onClick, sides, color }) => (
+const Shape = ({ onClick, sides, color, isSyncing }) => (
   <li
     style={{
-      color: color
+      color: color,
+      backgroundColor: isSyncing ? 'lightgray' : 'white' 
     }}
   >
     <div>Sides: {sides}</div>
