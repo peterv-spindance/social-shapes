@@ -3,9 +3,8 @@ import Express from 'express'
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { createStore } from 'redux'
-import { Provider } from 'react-redux'
-import counterApp from './reducers'
-import App from './containers/App'
+import rootReducer from '../src/reducers'
+import Root from '../src/components/Root'
 
 const app = Express()
 const port = 3000
@@ -19,13 +18,11 @@ app.use(handleRender)
 // We are going to fill these out in the sections to follow
 function handleRender(req, res) {
   // Create a new Redux store instance
-  const store = createStore(counterApp)
+  const store = createStore(rootReducer)
 
   // Render the component to a string
   const html = renderToString(
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <Root isServer={true} store={store} />
   )
 
   // Grab the initial state from our Redux store
@@ -59,4 +56,4 @@ function renderFullPage(html, preloadedState) {
     `
 }
 
-export default server;
+export default app;
