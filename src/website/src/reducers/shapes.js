@@ -5,7 +5,7 @@ const shapes = (state = {}, action) => {
         ...state,
         [action.id]: {
           isSyncing: true,
-          id: action.id,
+          shapeId: action.id,
           sides: action.sides,
           color: action.color
         }
