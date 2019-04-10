@@ -1,7 +1,8 @@
-let nextShapeId = 0 // TODO: sync this initial value with the DB
+import uuid from 'node-uuid';
+
 const addShape = (sides, color) => {
   return async dispatch => {
-    const shapeId = nextShapeId++;
+    const shapeId = uuid.v4();
     dispatch(requestAddShape(sides, color, shapeId));
 
     const response = await fetch(`https://buwrvdekig.execute-api.us-east-2.amazonaws.com/default/socialShapes`, {

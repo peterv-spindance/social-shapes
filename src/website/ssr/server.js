@@ -28,7 +28,7 @@ async function handleRender(req, res) {
   // get initial data
   const initialShapes = await getInitialShapes();
   const initState = {
-    shapes: initialShapes.Items,
+    shapes: initialShapes.Items.reduce((acc, next) => { return {...acc, [next.shapeId]: next} }, {}),
   }
 
   // Create a new Redux store instance
