@@ -9,6 +9,7 @@
   "devDependencies": {},
   "scripts": {
     "site-build": "cd ./src/website && npm run build",
+    "site-build-ssr": "cd ./src/website && npm run build-ssr",
     "site-start": "cd ./src/website && npm run start"
   },
   "repository": {
