@@ -1,16 +1,14 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import { BrowserRouter, Route } from 'react-router-dom';
-import { StaticRouter } from 'react-router';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import App from './App/App';
 
-const Root = ({ isServer, store }) => {
-  const Router = isServer ? StaticRouter : BrowserRouter;
+const Root = ({ store }) => {
   return (
     <Provider store={store}>
-      <Router>
+      <Router basename="/default/static" >
         <Route path="/:filter?" component={App} />
       </Router>
     </Provider>

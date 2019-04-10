@@ -4,10 +4,12 @@ import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { createStore } from 'redux'
 import rootReducer from '../src/reducers'
-import Root from '../src/components/Root'
+import StaticRoot from './StaticRoot'
+
+const doc = require('dynamodb-doc');
+const dynamo = new doc.DynamoDB();
 
 const app = Express()
-const port = 3000
 
 //Serve static files
 app.use('/static', Express.static('static'))
@@ -15,14 +17,27 @@ app.use('/static', Express.static('static'))
 // This is fired every time the server side receives a request
 app.use(handleRender)
 
+function getInitialShapes() {
+  return new Promise((resolve, reject) => {
+    dynamo.scan({ TableName: 'shapes' }, (err, res) => err ? reject(err.message) : resolve(res));
+  })
+}
+
 // We are going to fill these out in the sections to follow
-function handleRender(req, res) {
+async function handleRender(req, res) {
+  // get initial data
+  const initialShapes = await getInitialShapes();
+  const initState = {
+    shapes: initialShapes.Items,
+  }
+
   // Create a new Redux store instance
-  const store = createStore(rootReducer)
+  const store = createStore(rootReducer, initState)
+  let context = {};
 
   // Render the component to a string
   const html = renderToString(
-    <Root isServer={true} store={store} />
+    <StaticRoot store={store} location={''} context={context} />
   )
 
   // Grab the initial state from our Redux store
@@ -38,7 +53,7 @@ function renderFullPage(html, preloadedState) {
     <!doctype html>
     <html>
       <head>
-        <title>Redux Universal Example</title>
+        <title>Social Shapes</title>
       </head>
       <body>
         <div id="root">${html}</div>
@@ -50,7 +65,7 @@ function renderFullPage(html, preloadedState) {
             '\\u003c'
           )}
         </script>
-        <script src="/bundle.js"></script>
+        <script src="https://s3.us-east-2.amazonaws.com/social-shapes/bundle.js"></script>
       </body>
     </html>
     `

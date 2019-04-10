@@ -7,7 +7,7 @@ const ShapeList = ({ shapes, removeShape }) => (
       <Shape
         key={shapes[id].id}
         {...shapes[id]}
-        onClick={() => removeShape(shapes[id].id)}
+        onClick={() => removeShape(shapes[id].shapeId)}
       />
     )}
   </ul>
