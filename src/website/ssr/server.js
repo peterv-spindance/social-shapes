@@ -5,10 +5,11 @@ import { renderToString } from 'react-dom/server'
 import { createStore } from 'redux'
 import rootReducer from '../src/reducers'
 import StaticRoot from './StaticRoot'
+import doc from 'dynamodb-doc';
+import AWS from 'aws-sdk';
 
-const doc = require('dynamodb-doc');
 const dynamo = new doc.DynamoDB();
-
+const s3 = new AWS.S3();
 const app = Express()
 
 //Serve static files
@@ -23,19 +24,41 @@ function getInitialShapes() {
   })
 }
 
+function getBundledApp() {
+  return new Promise((resolve, reject) => {
+    s3.getObject({
+      Bucket: "social-shapes",
+      Key: "bundle.js"
+    }, (err, data) => {
+      if (err) {
+        console.error('Error: ' + err);
+        reject(err);
+      } else {
+        resolve(data.Body);
+      }
+    });
+  });
+}
+
 // We are going to fill these out in the sections to follow
 async function handleRender(req, res) {
+  console.log('Running function...');
+
+
   // get initial data
+  console.log('Getting initial shapes...');
   const initialShapes = await getInitialShapes();
   const initState = {
     shapes: initialShapes.Items.reduce((acc, next) => { return {...acc, [next.shapeId]: next} }, {}),
   }
 
   // Create a new Redux store instance
+  console.log('Creating store...');
   const store = createStore(rootReducer, initState)
   let context = {};
 
   // Render the component to a string
+  console.log('Rendering intial app');
   const html = renderToString(
     <StaticRoot store={store} location={''} context={context} />
   )
@@ -43,12 +66,19 @@ async function handleRender(req, res) {
   // Grab the initial state from our Redux store
   const preloadedState = store.getState()
 
+  console.log('Getting bundled app code...');
+  const bundledAppResponse = await getBundledApp();
+  console.log('done getting');
+
   // Send the rendered page back to the client
-  res.send(renderFullPage(html, preloadedState))
+  const renderedPage = renderFullPage(html, preloadedState, bundledAppResponse.toString());
+  console.log('done rendering');
+
+  res.send(renderedPage);
 }
 
 // TODO: store this as a template file not an interpolated string.
-function renderFullPage(html, preloadedState) {
+function renderFullPage(html, preloadedState, bundledApp) {
   return `
     <!doctype html>
     <html>
@@ -65,7 +95,7 @@ function renderFullPage(html, preloadedState) {
             '\\u003c'
           )}
         </script>
-        <script src="https://s3.us-east-2.amazonaws.com/social-shapes/bundle.js"></script>
+        <script>${bundledApp}</script>
       </body>
     </html>
     `
