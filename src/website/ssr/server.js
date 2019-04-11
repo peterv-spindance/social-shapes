@@ -12,10 +12,7 @@ const dynamo = new doc.DynamoDB();
 const s3 = new AWS.S3();
 const app = Express()
 
-//Serve static files
 app.use('/static', Express.static('static'))
-
-// This is fired every time the server side receives a request
 app.use(handleRender)
 
 function getInitialShapes() {
@@ -40,7 +37,6 @@ function getBundledApp() {
   });
 }
 
-// We are going to fill these out in the sections to follow
 async function handleRender(req, res) {
   console.log('Running function...');
 
