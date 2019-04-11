@@ -28,7 +28,6 @@ function getBundledApp() {
       Key: "bundle.js"
     }, (err, data) => {
       if (err) {
-        console.error('Error: ' + err);
         reject(err);
       } else {
         resolve(data.Body);
@@ -38,23 +37,17 @@ function getBundledApp() {
 }
 
 async function handleRender(req, res) {
-  console.log('Running function...');
-
-
   // get initial data
-  console.log('Getting initial shapes...');
   const initialShapes = await getInitialShapes();
   const initState = {
     shapes: initialShapes.Items.reduce((acc, next) => { return {...acc, [next.shapeId]: next} }, {}),
   }
 
   // Create a new Redux store instance
-  console.log('Creating store...');
   const store = createStore(rootReducer, initState)
   let context = {};
 
   // Render the component to a string
-  console.log('Rendering intial app');
   const html = renderToString(
     <StaticRoot store={store} location={''} context={context} />
   )
@@ -62,13 +55,10 @@ async function handleRender(req, res) {
   // Grab the initial state from our Redux store
   const preloadedState = store.getState()
 
-  console.log('Getting bundled app code...');
   const bundledAppResponse = await getBundledApp();
-  console.log('done getting');
 
   // Send the rendered page back to the client
   const renderedPage = renderFullPage(html, preloadedState, bundledAppResponse.toString());
-  console.log('done rendering');
 
   res.send(renderedPage);
 }
