@@ -1,5 +1,6 @@
 const path = require('path');
 // const nodeExternals = require('webpack-node-externals')
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   entry: './ssr/index.js',
@@ -10,6 +11,9 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist')
   },
+  plugins: [
+    new CleanWebpackPlugin()
+  ],
   module: {
     rules: [
       {
